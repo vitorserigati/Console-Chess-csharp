@@ -1,6 +1,6 @@
 namespace ConsoleChessLibrary.Table;
 
-class Piece
+public class Piece
 {
     public Position Position {get; set;}
     public Color Color {get; protected set;}

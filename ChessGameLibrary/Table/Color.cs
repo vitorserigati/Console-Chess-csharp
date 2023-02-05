@@ -1,6 +1,6 @@
 namespace ConsoleChessLibrary.Table;
 
-enum Color {
+public enum Color {
     Black,
     White,
     Red,
