@@ -7,11 +7,11 @@ public class Piece
     public int MoveQuantity {get; protected set;}
     public Table Table {get; protected set;}
 
-    public Piece(Position position, Color color, int moveQuantity, Table table)
+    public Piece(Color color, Table table)
     {
-        Position = position;
+        Position = null;
         Color = color;
-        MoveQuantity = moveQuantity;
+        MoveQuantity = 0;
         Table = table;
     }
 }

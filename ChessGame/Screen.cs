@@ -1,4 +1,4 @@
-namespace ConsoleChess.Screen;
+namespace ConsoleChess;
 using ConsoleChessLibrary.Table;
 
 class Screen
@@ -7,7 +7,7 @@ class Screen
     {
         for (int i = 0; i < table.Lines; i++)
         {
-            for (int j = 0; j < table.Columns; i++)
+            for (int j = 0; j < table.Columns; j++)
             {
                 if (table.Piece(i, j) == null)
                 {
@@ -15,9 +15,10 @@ class Screen
                 }
                 else
                 {
-                    Console.Write($"{table.Piece(i, j)}, ");
+                    Console.Write($" {table.Piece(i, j)} ");
                 }
             }
+            Console.WriteLine();
         }
     }
 }

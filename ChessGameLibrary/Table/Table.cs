@@ -18,4 +18,10 @@ public class Table
     {
         return Pieces[line, column];
     }
+
+    public void SetPiece(Piece piece, Position position)
+    {
+        Pieces[position.Line, position.Column] = piece;
+        piece.Position = position;
+    }
 }
