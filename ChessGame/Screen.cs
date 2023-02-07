@@ -1,5 +1,6 @@
 namespace ConsoleChess;
 using ConsoleChessLibrary.Table;
+using ConsoleChessLibrary.Chess;
 
 class Screen
 {
@@ -33,5 +34,13 @@ class Screen
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.Write(" " + piece + " ");
         Console.ForegroundColor = aux;
+    }
+
+    public static ChessPosition ReadChessPosition()
+    {
+        string s = Console.ReadLine();
+        char ch = s[0];
+        int line = int.Parse(s[1] + "");
+        return new ChessPosition(ch, line);
     }
 }

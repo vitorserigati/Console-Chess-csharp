@@ -32,6 +32,18 @@ public class Table
         piece.Position = position;
     }
 
+    public Piece RemovePiece(Position position)
+    {
+        if(Piece(position) == null)
+        {
+            return null;
+        }
+        Piece aux = Piece(position);
+        aux.Position = null;
+        Pieces[position.Line, position.Column] = null;
+        return aux;
+    }
+
     public bool PieceExists(Position position)
     {
         ValidatePosition(position);

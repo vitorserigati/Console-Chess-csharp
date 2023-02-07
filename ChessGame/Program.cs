@@ -1,6 +1,7 @@
 ﻿namespace ConsoleChess;
 
 using ConsoleChessLibrary.Table;
+using ConsoleChessLibrary.Table.Exception;
 using ConsoleChessLibrary.Chess;
 class Program
 {
@@ -8,18 +9,25 @@ class Program
     {
 
         try{
-            Table table = new Table(8, 8);
+            ChessMatch match = new ChessMatch();
+            while(!match.GameOver){
+                Console.Clear();
+            Screen.PrintTable(match.Table);
 
-            table.PlacePiece(new Tower(Color.Black, table), new Position(0, 0));
-            table.PlacePiece(new Tower(Color.White, table), new Position(1, 3));
-            table.PlacePiece(new King(Color.Black, table), new Position(0,2));
-            table.PlacePiece(new King(Color.White, table), new Position(3,5));
-            Screen.PrintTable(table);
-        }catch(Exception e)
+            Console.Write("Write origin: ");
+            Position origin = Screen.ReadChessPosition().ToPosition();
+            Console.Write("Write Destiny: ");
+
+            Position destiny = Screen.ReadChessPosition().ToPosition();
+
+            match.ExecuteMove(origin, destiny);
+            }
+        }catch(TableException e)
         {
             Console.WriteLine(e.Message);
         }
-
+        Console.WriteLine();
+        Console.Write("Press any button to exit...");
         Console.ReadKey();
     }
 }
