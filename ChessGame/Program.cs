@@ -6,10 +6,19 @@ class Program
 {
     static void Main(string[] args)
     {
-        ChessPosition pos = new ChessPosition('c', 7);
-        Console.WriteLine(pos);
-        Console.WriteLine(pos.ToPosition());
 
+        try{
+            Table table = new Table(8, 8);
+
+            table.PlacePiece(new Tower(Color.Black, table), new Position(0, 0));
+            table.PlacePiece(new Tower(Color.White, table), new Position(1, 3));
+            table.PlacePiece(new King(Color.Black, table), new Position(0,2));
+            table.PlacePiece(new King(Color.White, table), new Position(3,5));
+            Screen.PrintTable(table);
+        }catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
 
         Console.ReadKey();
     }
