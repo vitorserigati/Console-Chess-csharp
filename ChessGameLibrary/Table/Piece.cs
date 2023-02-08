@@ -1,6 +1,6 @@
 namespace ConsoleChessLibrary.Table;
 
-public class Piece
+public abstract class Piece
 {
     public Position Position { get; set; }
     public Color Color { get; protected set; }
@@ -18,4 +18,12 @@ public class Piece
     {
         MoveQuantity++;
     }
+
+    protected bool CanMove(Position pos)
+    {
+        Piece piece = Table.Piece(pos);
+        return piece == null || piece.Color != Color;
+    }
+
+    public abstract bool[,] PossibleMoves();
 }

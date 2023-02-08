@@ -55,7 +55,7 @@ public class Table
         if (!ValidPosition(position)) throw new TableException("Invalid Position!");
     }
 
-    private bool ValidPosition(Position position)
+    public bool ValidPosition(Position position)
     {
         if (position.Line < 0 || position.Line >= Lines || position.Column < 0 || position.Column >= Columns) return false;
 

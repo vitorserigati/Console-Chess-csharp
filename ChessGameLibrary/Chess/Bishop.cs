@@ -4,6 +4,11 @@ public class Bishop : Piece
 {
     public Bishop(Color color, Table table) : base (color, table){}
 
+    public override bool[,] PossibleMoves()
+    {
+        throw new NotImplementedException();
+    }
+
     public override string ToString()
     {
         const string white = "\u265d";

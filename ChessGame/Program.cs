@@ -8,21 +8,26 @@ class Program
     static void Main(string[] args)
     {
 
-        try{
+        try
+        {
             ChessMatch match = new ChessMatch();
-            while(!match.GameOver){
-                Console.Clear();
-            Screen.PrintTable(match.Table);
+            while (!match.GameOver)
+            {
+                Screen.PrintTable(match.Table);
 
-            Console.Write("Write origin: ");
-            Position origin = Screen.ReadChessPosition().ToPosition();
-            Console.Write("Write Destiny: ");
+                Console.Write("Write origin: ");
+                Position origin = Screen.ReadChessPosition().ToPosition();
 
-            Position destiny = Screen.ReadChessPosition().ToPosition();
+                Screen.PrintTable(match.Table, origin);
 
-            match.ExecuteMove(origin, destiny);
+                Console.Write("Write Destiny: ");
+
+                Position destiny = Screen.ReadChessPosition().ToPosition();
+
+                match.ExecuteMove(origin, destiny);
             }
-        }catch(TableException e)
+        }
+        catch (TableException e)
         {
             Console.WriteLine(e.Message);
         }
