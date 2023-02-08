@@ -18,6 +18,24 @@ public abstract class Piece
     {
         MoveQuantity++;
     }
+    public bool AnyPossibleMove()
+    {
+        bool[,] moves = PossibleMoves();
+        for (int i = 0; i < Table.Lines; i++)
+        {
+            for (int j = 0; j < Table.Columns; j++)
+            {
+                if (moves[i, j]) return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool CanMoveto(Position pos)
+    {
+        return PossibleMoves()[pos.Line, pos.Column];
+    }
 
     protected bool CanMove(Position pos)
     {

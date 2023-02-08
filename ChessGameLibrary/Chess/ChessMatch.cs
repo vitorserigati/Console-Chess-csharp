@@ -1,11 +1,12 @@
 namespace ConsoleChessLibrary.Chess;
 using ConsoleChessLibrary.Table;
+using ConsoleChessLibrary.Table.Exception;
 public class ChessMatch
 {
     public Table Table { get; private set; }
-    private int Turn;
-    private Color CurrentPlayer;
-    public bool GameOver {get; private set; } = false;
+    public int Turn { get; private set; }
+    public Color CurrentPlayer { get; private set; }
+    public bool GameOver { get; private set; } = false;
 
     public ChessMatch()
     {
@@ -15,12 +16,46 @@ public class ChessMatch
         InsertPieces();
     }
 
-    public void ExecuteMove(Position origin, Position destiny)
+    public void RealizeMove(Position origin, Position destiny)
+    {
+        if (true)
+        {
+            ExecuteMove(origin, destiny);
+            IncrementTurn();
+            ChangePlayer();
+        }
+        else
+        {
+            RealizeMove(origin, destiny);
+        }
+    }
+
+    private void ExecuteMove(Position origin, Position destiny)
     {
         Piece piece = Table.RemovePiece(origin);
         piece.IncrementMoves();
         Piece capturedPiece = Table.RemovePiece(destiny);
         Table.PlacePiece(piece, destiny);
+    }
+    public void ValidateOriginPosition(Position origin)
+    {
+        if(Table.Piece(origin) == null) throw new TableException("There's no piece in this position");
+        if(CurrentPlayer != Table.Piece(origin).Color) throw new TableException("This piece does not belong to you");
+        if(!Table.Piece(origin).AnyPossibleMove()) throw new TableException("There's no possible moves for this piece");
+    }
+    public void ValidateDestinyPosition(Position origin, Position destiny)
+    {
+        if(!Table.Piece(origin).CanMoveto(destiny)) throw new TableException("Destiny position is invalid"); 
+    }
+
+
+    private void ChangePlayer()
+    {
+        CurrentPlayer = (Turn % 2 == 0) ? Color.Black : Color.White;
+    }
+    private void IncrementTurn()
+    {
+        Turn++;
     }
 
     private void InsertPieces()
@@ -33,7 +68,7 @@ public class ChessMatch
         Table.PlacePiece(new Bishop(Color.White, Table), new ChessPosition('f', 1).ToPosition());
         Table.PlacePiece(new Queen(Color.White, Table), new ChessPosition('d', 1).ToPosition());
         Table.PlacePiece(new King(Color.White, Table), new ChessPosition('e', 1).ToPosition());
-        char line= 'a';
+        char line = 'a';
         for (int i = 0; i < 8; i++)
         {
             Table.PlacePiece(new Pawn(Color.White, Table), new ChessPosition(line, 2).ToPosition());
