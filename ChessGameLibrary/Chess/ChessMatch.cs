@@ -7,6 +7,8 @@ public class ChessMatch
     public int Turn { get; private set; }
     public Color CurrentPlayer { get; private set; }
     public bool GameOver { get; private set; } = false;
+    private HashSet<Piece> Pieces {get;} = new HashSet<Piece>();
+    private HashSet<Piece> Captured {get;} = new HashSet<Piece>();
 
     public ChessMatch()
     {
@@ -36,6 +38,9 @@ public class ChessMatch
         piece.IncrementMoves();
         Piece capturedPiece = Table.RemovePiece(destiny);
         Table.PlacePiece(piece, destiny);
+        if( capturedPiece != null){
+            Captured.Add(capturedPiece);
+        }
     }
     public void ValidateOriginPosition(Position origin)
     {
@@ -46,6 +51,40 @@ public class ChessMatch
     public void ValidateDestinyPosition(Position origin, Position destiny)
     {
         if(!Table.Piece(origin).CanMoveto(destiny)) throw new TableException("Destiny position is invalid"); 
+    }
+
+    public HashSet<Piece> CapturedPieces(Color color)
+    {
+        HashSet<Piece> output = new HashSet<Piece>();
+        foreach ( Piece piece in Captured)
+        {
+            if(piece.Color == color)
+            {
+                output.Add(piece);
+            }
+        }
+        return output;
+    }
+
+    public HashSet<Piece> InGamePieces(Color color)
+    {
+        HashSet<Piece> output = new HashSet<Piece>();
+        foreach ( Piece piece in Pieces)
+        {
+            if(piece.Color == color)
+            {
+                output.Add(piece);
+            }
+        }
+        output.ExceptWith(CapturedPieces(color));
+        return output;
+    }
+
+
+    private void PlaceNewPiece(char column, int line, Piece piece)
+    {
+        Table.PlacePiece(piece, new ChessPosition(column, line).ToPosition());
+        Pieces.Add(piece);
     }
 
 
@@ -60,28 +99,28 @@ public class ChessMatch
 
     private void InsertPieces()
     {
-        Table.PlacePiece(new Tower(Color.White, Table), new ChessPosition('a', 1).ToPosition());
-        Table.PlacePiece(new Tower(Color.White, Table), new ChessPosition('h', 1).ToPosition());
-        Table.PlacePiece(new Knight(Color.White, Table), new ChessPosition('b', 1).ToPosition());
-        Table.PlacePiece(new Knight(Color.White, Table), new ChessPosition('g', 1).ToPosition());
-        Table.PlacePiece(new Bishop(Color.White, Table), new ChessPosition('c', 1).ToPosition());
-        Table.PlacePiece(new Bishop(Color.White, Table), new ChessPosition('f', 1).ToPosition());
-        Table.PlacePiece(new Queen(Color.White, Table), new ChessPosition('d', 1).ToPosition());
-        Table.PlacePiece(new King(Color.White, Table), new ChessPosition('e', 1).ToPosition());
-        char line = 'a';
+        PlaceNewPiece('a', 1 , new Tower(Color.White, Table));
+        PlaceNewPiece('h', 1, new Tower(Color.White, Table));
+        PlaceNewPiece('b', 1,new Knight(Color.White, Table));
+        PlaceNewPiece('g', 1,new Knight(Color.White, Table));
+        PlaceNewPiece('c', 1,new Bishop(Color.White, Table));
+        PlaceNewPiece('f', 1,new Bishop(Color.White, Table));
+        PlaceNewPiece('d', 1,new Queen(Color.White, Table));
+        PlaceNewPiece('e', 1,new King(Color.White, Table));
+        char column = 'a';
         for (int i = 0; i < 8; i++)
         {
-            Table.PlacePiece(new Pawn(Color.White, Table), new ChessPosition(line, 2).ToPosition());
-            Table.PlacePiece(new Pawn(Color.Black, Table), new ChessPosition(line, 7).ToPosition());
-            line++;
+            PlaceNewPiece(column, 2, new Pawn(Color.White, Table));
+            PlaceNewPiece(column, 7, new Pawn(Color.Black, Table));
+            column++;
         }
-        Table.PlacePiece(new Tower(Color.Black, Table), new ChessPosition('a', 8).ToPosition());
-        Table.PlacePiece(new Tower(Color.Black, Table), new ChessPosition('h', 8).ToPosition());
-        Table.PlacePiece(new Knight(Color.Black, Table), new ChessPosition('b', 8).ToPosition());
-        Table.PlacePiece(new Knight(Color.Black, Table), new ChessPosition('g', 8).ToPosition());
-        Table.PlacePiece(new Bishop(Color.Black, Table), new ChessPosition('c', 8).ToPosition());
-        Table.PlacePiece(new Bishop(Color.Black, Table), new ChessPosition('f', 8).ToPosition());
-        Table.PlacePiece(new Queen(Color.Black, Table), new ChessPosition('d', 8).ToPosition());
-        Table.PlacePiece(new King(Color.Black, Table), new ChessPosition('e', 8).ToPosition());
+        PlaceNewPiece('a', 8,new Tower(Color.Black, Table));
+        PlaceNewPiece('h', 8,new Tower(Color.Black, Table));
+        PlaceNewPiece('b', 8,new Knight(Color.Black, Table));
+        PlaceNewPiece('g', 8,new Knight(Color.Black, Table));
+        PlaceNewPiece('c', 8,new Bishop(Color.Black, Table));
+        PlaceNewPiece('f', 8,new Bishop(Color.Black, Table));
+        PlaceNewPiece('d', 8,new Queen(Color.Black, Table));
+        PlaceNewPiece('e', 8,new King(Color.Black, Table));
     }
 }

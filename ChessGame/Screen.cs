@@ -1,6 +1,7 @@
 namespace ConsoleChess;
 using ConsoleChessLibrary.Table;
 using ConsoleChessLibrary.Chess;
+using System.Text;
 
 class Screen
 {
@@ -79,5 +80,30 @@ class Screen
         char ch = s[0];
         int line = int.Parse(s[1] + "");
         return new ChessPosition(ch, line);
+    }
+
+    public static void PrintCapturedPieces(ChessMatch match)
+    {
+        Console.WriteLine("Captured Pieces: ");
+        Console.Write("White: ");
+        PrintPiecesCollection(match.CapturedPieces(Color.White));
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write("Black: ");
+        PrintPiecesCollection(match.CapturedPieces(Color.Black));
+        Console.ResetColor();
+    }
+
+    private static void PrintPiecesCollection(HashSet<Piece> collection)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append('[');
+        foreach( Piece piece in collection)
+        {
+            sb.Append(piece);
+            sb.Append(' ');
+        }
+        sb.Append(']');
+        sb.AppendLine();
+        Console.WriteLine(sb.ToString());
     }
 }
