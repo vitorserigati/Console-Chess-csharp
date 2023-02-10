@@ -5,6 +5,21 @@ using System.Text;
 
 class Screen
 {
+
+    public static void PrintMatch(ChessMatch match)
+    {
+        PrintTable(match.Table);
+        Console.WriteLine();
+        PrintCapturedPieces(match);
+        Console.WriteLine();
+        Console.WriteLine($"Turn: {match.Turn}");
+        Console.WriteLine($"Waiting for {match.CurrentPlayer}'s move!");
+        if(match.Check)
+        {
+            Console.WriteLine("Check!");
+        }
+    }
+
     public static void PrintTable(Table table)
     {
         Console.Clear();
@@ -19,6 +34,7 @@ class Screen
         }
         Console.WriteLine("   a  b  c  d  e  f  g  h ");
         Console.WriteLine();
+
     }
 
     public static void PrintTable(Table table, Position position)
@@ -76,10 +92,10 @@ class Screen
 
     public static ChessPosition ReadChessPosition()
     {
-        string s = Console.ReadLine();
-        char ch = s[0];
-        int line = int.Parse(s[1] + "");
-        return new ChessPosition(ch, line);
+        string input = Console.ReadLine();
+        char column = input[0];
+        int line = int.Parse(input[1] + "");
+        return new ChessPosition(column, line);
     }
 
     public static void PrintCapturedPieces(ChessMatch match)

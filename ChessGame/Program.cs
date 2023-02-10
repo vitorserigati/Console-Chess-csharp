@@ -16,11 +16,7 @@ class Program
                 try
                 {
                     Screen.PrintTable(match.Table);
-                    Console.WriteLine();
-                    Console.WriteLine($"Turn: {match.Turn}");
-                    Console.WriteLine($"Waiting for {match.CurrentPlayer}'s move");
-                    Screen.PrintCapturedPieces(match);
-
+                    Screen.PrintMatch(match);
                     Console.Write("Write origin: ");
                     Position origin = Screen.ReadChessPosition().ToPosition();
                     match.ValidateOriginPosition(origin);

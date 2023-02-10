@@ -18,6 +18,11 @@ public abstract class Piece
     {
         MoveQuantity++;
     }
+
+    public void DecrementMoves()
+    {
+        MoveQuantity--;
+    }
     public bool AnyPossibleMove()
     {
         bool[,] moves = PossibleMoves();
