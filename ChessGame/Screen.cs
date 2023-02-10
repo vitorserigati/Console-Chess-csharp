@@ -13,10 +13,22 @@ class Screen
         PrintCapturedPieces(match);
         Console.WriteLine();
         Console.WriteLine($"Turn: {match.Turn}");
-        Console.WriteLine($"Waiting for {match.CurrentPlayer}'s move!");
-        if(match.Check)
+        if (!match.GameOver)
         {
-            Console.WriteLine("Check!");
+
+            Console.WriteLine($"Waiting for {match.CurrentPlayer}'s move!");
+            if (match.Check)
+            {
+                Console.WriteLine("Check!");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Check Mate!");
+            ConsoleColor actual = Console.ForegroundColor;
+            Console.ForegroundColor = match.CurrentPlayer == Color.White ? actual : ConsoleColor.Blue;
+            Console.WriteLine($"Winner: {match.CurrentPlayer}");
+            Console.ResetColor();
         }
     }
 
@@ -113,7 +125,7 @@ class Screen
     {
         StringBuilder sb = new StringBuilder();
         sb.Append('[');
-        foreach( Piece piece in collection)
+        foreach (Piece piece in collection)
         {
             sb.Append(piece);
             sb.Append(' ');

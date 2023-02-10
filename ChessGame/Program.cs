@@ -39,6 +39,7 @@ class Program
                     Console.ReadKey();
                 }
             }
+            Screen.PrintMatch(match);
         }
         catch (TableException e)
         {

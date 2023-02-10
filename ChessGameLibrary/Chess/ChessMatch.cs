@@ -9,7 +9,7 @@ public class ChessMatch
     public bool GameOver { get; private set; } = false;
     private HashSet<Piece> Pieces { get; } = new HashSet<Piece>();
     private HashSet<Piece> Captured { get; } = new HashSet<Piece>();
-    public bool Check { get; private set;  } = false;
+    public bool Check { get; private set; } = false;
 
     public ChessMatch()
     {
@@ -22,19 +22,29 @@ public class ChessMatch
     public void RealizeMove(Position origin, Position destiny)
     {
         Piece capturedPiece = ExecuteMove(origin, destiny);
-        if (IsinCheck(CurrentPlayer))
+        if (IsInCheck(CurrentPlayer))
         {
             UndoMove(origin, destiny, capturedPiece);
             throw new TableException("You cannot put yourself in check!");
         }
-        if(IsinCheck(Adversary(CurrentPlayer)))
+        if (IsInCheck(Adversary(CurrentPlayer)))
         {
             Check = true;
-        }else{
+        }
+        else
+        {
             Check = false;
         }
-        IncrementTurn();
-        ChangePlayer();
+
+        if (CheckMate(Adversary(CurrentPlayer)))
+        {
+            GameOver = true;
+        }
+        else
+        {
+            IncrementTurn();
+            ChangePlayer();
+        }
     }
 
     private void UndoMove(Position origin, Position destiny, Piece? capturedPiece)
@@ -99,7 +109,39 @@ public class ChessMatch
         return output;
     }
 
-    private bool IsinCheck(Color color)
+    public bool CheckMate(Color color)
+    {
+        if (!IsInCheck(color))
+        {
+            return false;
+        }
+
+        foreach (Piece piece in InGamePieces(color))
+        {
+            bool[,] moves = piece.PossibleMoves();
+            for (int i = 0; i < Table.Lines; i++)
+            {
+                for (int j = 0; j < Table.Columns; j++)
+                {
+                    if (moves[i, j])
+                    {
+                        Position origin = piece.Position;
+                        Position destiny = new Position(i, j);
+                        Piece capturedPiece = ExecuteMove(piece.Position, destiny);
+                        bool inCheck = IsInCheck(color);
+                        UndoMove(origin, destiny, capturedPiece);
+                        if (!inCheck)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private bool IsInCheck(Color color)
     {
         Piece king = King(color);
         if (king == null)
@@ -158,26 +200,26 @@ public class ChessMatch
     {
         PlaceNewPiece('a', 1, new Tower(Color.White, Table));
         PlaceNewPiece('h', 1, new Tower(Color.White, Table));
-       /* PlaceNewPiece('b', 1, new Knight(Color.White, Table));
-        PlaceNewPiece('g', 1, new Knight(Color.White, Table));
-        PlaceNewPiece('c', 1, new Bishop(Color.White, Table));
-        PlaceNewPiece('f', 1, new Bishop(Color.White, Table));
-        PlaceNewPiece('d', 1, new Queen(Color.White, Table));*/
+         PlaceNewPiece('b', 1, new Knight(Color.White, Table));
+         PlaceNewPiece('g', 1, new Knight(Color.White, Table));
+         PlaceNewPiece('c', 1, new Bishop(Color.White, Table));
+         PlaceNewPiece('f', 1, new Bishop(Color.White, Table));
+         PlaceNewPiece('d', 1, new Queen(Color.White, Table));
         PlaceNewPiece('e', 1, new King(Color.White, Table));
-        /*char column = 'a';
+        char column = 'a';
         for (int i = 0; i < 8; i++)
         {
             PlaceNewPiece(column, 2, new Pawn(Color.White, Table));
             PlaceNewPiece(column, 7, new Pawn(Color.Black, Table));
             column++;
-        }*/
+        }
         PlaceNewPiece('a', 8, new Tower(Color.Black, Table));
         PlaceNewPiece('h', 8, new Tower(Color.Black, Table));
-        /*PlaceNewPiece('b', 8, new Knight(Color.Black, Table));
+        PlaceNewPiece('b', 8, new Knight(Color.Black, Table));
         PlaceNewPiece('g', 8, new Knight(Color.Black, Table));
         PlaceNewPiece('c', 8, new Bishop(Color.Black, Table));
         PlaceNewPiece('f', 8, new Bishop(Color.Black, Table));
-        PlaceNewPiece('d', 8, new Queen(Color.Black, Table));*/
+        PlaceNewPiece('d', 8, new Queen(Color.Black, Table));
         PlaceNewPiece('e', 8, new King(Color.Black, Table));
     }
 }
