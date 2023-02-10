@@ -37,7 +37,7 @@ public abstract class Piece
         return false;
     }
 
-    public bool CanMoveto(Position pos)
+    public bool PossibleMoviment(Position pos)
     {
         return PossibleMoves()[pos.Line, pos.Column];
     }

@@ -79,7 +79,7 @@ public class ChessMatch
     }
     public void ValidateDestinyPosition(Position origin, Position destiny)
     {
-        if (!Table.Piece(origin).CanMoveto(destiny)) throw new TableException("Destiny position is invalid");
+        if (!Table.Piece(origin).PossibleMoviment(destiny)) throw new TableException("Destiny position is invalid");
     }
 
     public HashSet<Piece> CapturedPieces(Color color)
