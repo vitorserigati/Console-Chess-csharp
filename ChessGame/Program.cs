@@ -37,6 +37,13 @@ class Program
                     Console.ResetColor();
                     Console.Write("Press Any key to try again... ");
                     Console.ReadKey();
+                }catch( IndexOutOfRangeException e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Wrong move detected! {0}", e.Message);
+                    Console.ResetColor();
+                    Console.Write("Press Any key to try again...");
+                    Console.ReadKey();
                 }
             }
             Screen.PrintMatch(match);

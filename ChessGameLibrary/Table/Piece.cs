@@ -42,7 +42,7 @@ public abstract class Piece
         return PossibleMoves()[pos.Line, pos.Column];
     }
 
-    protected bool CanMove(Position pos)
+    virtual protected bool CanMove(Position pos)
     {
         Piece piece = Table.Piece(pos);
         return piece == null || piece.Color != Color;
