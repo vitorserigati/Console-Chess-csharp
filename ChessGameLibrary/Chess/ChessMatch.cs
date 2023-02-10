@@ -51,12 +51,31 @@ public class ChessMatch
     {
         Piece piece = Table.RemovePiece(destiny);
         piece.DecrementMoves();
+        if (piece is King && destiny.Column == origin.Column + 2)
+        {
+            Position towerOrigin = new Position(origin.Line, origin.Column + 3);
+            Position towerDestiny = new Position(origin.Line, origin.Column + 1);
+            Piece tower = Table.RemovePiece(towerDestiny);
+            tower.DecrementMoves();
+            Table.PlacePiece(tower, origin);
+        }
+
+        if (piece is King && destiny.Column == origin.Column - 2)
+        {
+            Position towerOrigin = new Position(origin.Line, origin.Column - 4);
+            Position towerDestiny = new Position(origin.Line, origin.Column - 1);
+            Piece tower = Table.RemovePiece(towerDestiny);
+            tower.DecrementMoves();
+            Table.PlacePiece(tower, origin);
+        }
         if (capturedPiece != null)
         {
             Table.PlacePiece(capturedPiece, destiny);
             Captured.Remove(capturedPiece);
         }
         Table.PlacePiece(piece, origin);
+
+
     }
 
     private Piece ExecuteMove(Position origin, Position destiny)
@@ -69,6 +88,25 @@ public class ChessMatch
         {
             Captured.Add(capturedPiece);
         }
+        //# Special Move Castling
+        if (piece is King && destiny.Column == origin.Column + 2)
+        {
+            Position towerOrigin = new Position(origin.Line, origin.Column + 3);
+            Position towerDestiny = new Position(origin.Line, origin.Column + 1);
+            Piece tower = Table.RemovePiece(towerOrigin);
+            tower.IncrementMoves();
+            Table.PlacePiece(tower, towerDestiny);
+        }
+        //# Special Move Castling 2
+        if (piece is King && destiny.Column == origin.Column - 2)
+        {
+            Position towerOrigin = new Position(origin.Line, origin.Column - 4);
+            Position towerDestiny = new Position(origin.Line, origin.Column - 1);
+            Piece tower = Table.RemovePiece(towerOrigin);
+            tower.IncrementMoves();
+            Table.PlacePiece(tower, towerDestiny);
+        }
+
         return capturedPiece;
     }
     public void ValidateOriginPosition(Position origin)
@@ -200,12 +238,12 @@ public class ChessMatch
     {
         PlaceNewPiece('a', 1, new Tower(Color.White, Table));
         PlaceNewPiece('h', 1, new Tower(Color.White, Table));
-         PlaceNewPiece('b', 1, new Knight(Color.White, Table));
-         PlaceNewPiece('g', 1, new Knight(Color.White, Table));
-         PlaceNewPiece('c', 1, new Bishop(Color.White, Table));
-         PlaceNewPiece('f', 1, new Bishop(Color.White, Table));
-         PlaceNewPiece('d', 1, new Queen(Color.White, Table));
-        PlaceNewPiece('e', 1, new King(Color.White, Table));
+        PlaceNewPiece('b', 1, new Knight(Color.White, Table));
+        PlaceNewPiece('g', 1, new Knight(Color.White, Table));
+        PlaceNewPiece('c', 1, new Bishop(Color.White, Table));
+        PlaceNewPiece('f', 1, new Bishop(Color.White, Table));
+        PlaceNewPiece('d', 1, new Queen(Color.White, Table));
+        PlaceNewPiece('e', 1, new King(Color.White, Table, this));
         char column = 'a';
         for (int i = 0; i < 8; i++)
         {
@@ -220,6 +258,6 @@ public class ChessMatch
         PlaceNewPiece('c', 8, new Bishop(Color.Black, Table));
         PlaceNewPiece('f', 8, new Bishop(Color.Black, Table));
         PlaceNewPiece('d', 8, new Queen(Color.Black, Table));
-        PlaceNewPiece('e', 8, new King(Color.Black, Table));
+        PlaceNewPiece('e', 8, new King(Color.Black, Table, this));
     }
 }

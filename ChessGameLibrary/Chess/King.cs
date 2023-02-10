@@ -2,7 +2,11 @@ namespace ConsoleChessLibrary.Chess;
 using ConsoleChessLibrary.Table;
 public class King : Piece
 {
-    public King(Color color, Table table) : base(color, table) { }
+    private ChessMatch Match;
+    public King(Color color, Table table, ChessMatch match) : base(color, table)
+    {
+        Match = match;
+    }
 
     public override string ToString()
     {
@@ -14,67 +18,104 @@ public class King : Piece
 
     public override bool[,] PossibleMoves()
     {
-        bool[,] mat = new bool[Table.Lines, Table.Columns];
-        Position pos = new Position(0, 0);
+        bool[,] moves = new bool[Table.Lines, Table.Columns];
+        Position position = new Position(0, 0);
 
         //Up 
-        pos.DefineValues(Position.Line - 1, Position.Column);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line - 1, Position.Column);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
         // Up right
-        pos.DefineValues(Position.Line - 1, Position.Column + 1);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line - 1, Position.Column + 1);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
         //Right
-        pos.DefineValues(Position.Line, Position.Column + 1);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line, Position.Column + 1);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
         // Down Right
-        pos.DefineValues(Position.Line + 1, Position.Column + 1);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line + 1, Position.Column + 1);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
         //Down
-        pos.DefineValues(Position.Line + 1, Position.Column);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line + 1, Position.Column);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
         // Down Left
-        pos.DefineValues(Position.Line + 1, Position.Column - 1);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line + 1, Position.Column - 1);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
         //Left
-        pos.DefineValues(Position.Line, Position.Column - 1);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line, Position.Column - 1);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
         //Up left
-        pos.DefineValues(Position.Line - 1, Position.Column - 1);
-        if (Table.ValidPosition(pos) && CanMove(pos))
+        position.DefineValues(Position.Line - 1, Position.Column - 1);
+        if (Table.ValidPosition(position) && CanMove(position))
         {
-            mat[pos.Line, pos.Column] = true;
+            moves[position.Line, position.Column] = true;
         };
 
+        // #Special Castling
+
+        if (MoveQuantity == 0 && !Match.Check)
+        {
+            Position positionTower = new Position(Position.Line, Position.Column + 3);
+            if (TestTowerForCastlingMove(positionTower))
+            {
+                Position positionOne = new Position(Position.Line, Position.Column + 1);
+                Position positionTwo = new Position(Position.Line, Position.Column + 2);
+                if (Table.Piece(positionOne) == null && Table.Piece(positionTwo) == null)
+                {
+                    moves[Position.Line, Position.Column + 2] = true;
+                }
+            }
+        }
+        //#Special Castling 2
+        if (MoveQuantity == 0 && !Match.Check)
+        {
+            Position positionTower = new Position(Position.Line, Position.Column - 4);
+            if (TestTowerForCastlingMove(positionTower))
+            {
+                Position positionOne = new Position(Position.Line, Position.Column - 1);
+                Position positionTwo = new Position(Position.Line, Position.Column - 2);
+                Position positionThree = new Position(Position.Line, Position.Column - 3);
+                if (Table.Piece(positionOne) == null && Table.Piece(positionTwo) == null && Table.Piece(positionThree) == null)
+                {
+                    moves[Position.Line, Position.Column - 2] = true;
+                }
+            }
+        }
 
 
-        return mat;
+        return moves;
     }
+
+    private bool TestTowerForCastlingMove(Position position)
+    {
+        Piece piece = Table.Piece(position);
+        return piece != null && piece is Tower && piece.Color == Color && piece.MoveQuantity == 0;
+    }
+
 }
