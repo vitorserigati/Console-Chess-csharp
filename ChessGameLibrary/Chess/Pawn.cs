@@ -2,12 +2,17 @@ namespace ConsoleChessLibrary.Chess;
 using ConsoleChessLibrary.Table;
 public class Pawn : Piece
 {
-    public Pawn(Color color, Table table) : base(color, table) { }
+    private ChessMatch Match { get; }
+    public Pawn(Color color, Table table, ChessMatch match) : base(color, table)
+    {
+        Match = match;
+    }
 
     public override bool[,] PossibleMoves()
     {
         bool[,] moves = new bool[Table.Lines, Table.Columns];
         Position position = new Position(0, 0);
+        Position inTheWayPosition = new Position(0, 0);
 
         if (Color == Color.White)
         {
@@ -17,7 +22,8 @@ public class Pawn : Piece
                 moves[position.Line, position.Column] = true;
             }
             position.DefineValues(Position.Line - 2, Position.Column);
-            if (Table.ValidPosition(position) && Free(position) && MoveQuantity == 0)
+            inTheWayPosition.DefineValues(Position.Line - 1, Position.Column);
+            if (Table.ValidPosition(position) && Free(position) && Free(inTheWayPosition) && MoveQuantity == 0)
             {
                 moves[position.Line, position.Column] = true;
             }
@@ -31,6 +37,20 @@ public class Pawn : Piece
             {
                 moves[position.Line, position.Column] = true;
             }
+            // #Special Move En Passant
+            if (Position.Line == 3)
+            {
+                Position left = new Position(Position.Line, Position.Column - 1);
+                if (Table.ValidPosition(left) && EnemyExistis(left) && Table.Piece(left) == Match.VulnerableEnPassant)
+                {
+                    moves[left.Line - 1, left.Column] = true;
+                }
+                Position right = new Position(Position.Line, Position.Column + 1);
+                if (Table.ValidPosition(right) && EnemyExistis(right) && Table.Piece(right) == Match.VulnerableEnPassant)
+                {
+                    moves[right.Line - 1, right.Column] = true;
+                }
+            }
 
         }
         else
@@ -42,7 +62,8 @@ public class Pawn : Piece
                 moves[position.Line, position.Column] = true;
             }
             position.DefineValues(Position.Line + 2, Position.Column);
-            if (Table.ValidPosition(position) && Free(position) && MoveQuantity == 0)
+            inTheWayPosition.DefineValues(Position.Line + 1, Position.Column);
+            if (Table.ValidPosition(position) && Free(position) && Free(inTheWayPosition) && MoveQuantity == 0)
             {
                 moves[position.Line, position.Column] = true;
             }
@@ -55,6 +76,21 @@ public class Pawn : Piece
             if (Table.ValidPosition(position) && EnemyExistis(position))
             {
                 moves[position.Line, position.Column] = true;
+            }
+
+            // #Special Move En Passant
+            if (Position.Line == 4)
+            {
+                Position left = new Position(Position.Line, Position.Column - 1);
+                if (Table.ValidPosition(left) && EnemyExistis(left) && Table.Piece(left) == Match.VulnerableEnPassant)
+                {
+                    moves[left.Line + 1, left.Column] = true;
+                }
+                Position right = new Position(Position.Line, Position.Column + 1);
+                if (Table.ValidPosition(right) && EnemyExistis(right) && Table.Piece(right) == Match.VulnerableEnPassant)
+                {
+                    moves[right.Line + 1, right.Column] = true;
+                }
             }
         }
 
