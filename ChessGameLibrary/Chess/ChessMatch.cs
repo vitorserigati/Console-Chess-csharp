@@ -29,6 +29,20 @@ public class ChessMatch
             UndoMove(origin, destiny, capturedPiece);
             throw new TableException("You cannot put yourself in check!");
         }
+        Piece piece = Table.Piece(destiny);
+
+        //# Promotion Move
+        if (piece is Pawn)
+        {
+            if ((piece.Color == Color.White && destiny.Line == 0) || (piece.Color == Color.Black && destiny.Line == 7))
+            {
+                piece = Table.RemovePiece(destiny);
+                Pieces.Remove(piece);
+                Piece queen = new Queen(piece.Color, Table);
+                Table.PlacePiece(queen, destiny);
+                Pieces.Add(queen);
+            }
+        }
         if (IsInCheck(Adversary(CurrentPlayer)))
         {
             Check = true;
@@ -47,7 +61,6 @@ public class ChessMatch
             IncrementTurn();
             ChangePlayer();
         }
-        Piece piece = Table.Piece(destiny);
         //#Special move En Passant
         if (piece is Pawn && (destiny.Line == origin.Line - 2 || destiny.Line == origin.Line + 2))
         {
